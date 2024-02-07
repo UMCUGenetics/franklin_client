@@ -1,0 +1,21 @@
+[project]
+name = "Franklin_Client"
+version = "0.0.0"
+authors = [
+  { name="Robert Ernst", email="author@example.com" },
+]
+description = "Python package for Franklin API"
+readme = "README.md"
+requires-python = ">=3.6"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/UMCUGenetics/franklin_client"
+Issues = "https://github.com/UMCUGenetics/franklin_client/issues"
+
+[tool.pytest.ini_options]
+pythonpath = "src/"
