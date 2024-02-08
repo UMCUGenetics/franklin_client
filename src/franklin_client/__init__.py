@@ -35,3 +35,7 @@ class Franklin(object):
     def get_assay_list(self):
         """Get a list of all organization assays."""
         return self._get(endpoint='assay/list')['assays']  # Note: Should we return the whole response or just the assays list?
+
+    def get_analysis_list(self):
+        """Get a list of all analyses for each assay."""
+        return self._get(endpoint='analyses/list')['analyses_by_assay']

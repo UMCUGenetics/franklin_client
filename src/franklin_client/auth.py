@@ -19,6 +19,5 @@ class FranklinAuth(requests.auth.AuthBase):
 
         :param r: The request to add the Authorization header to
         """
-
         r.headers['Authorization'] = f'Bearer {self.token}'
         return r
