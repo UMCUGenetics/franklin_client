@@ -6,18 +6,18 @@ from .auth import FranklinAuth
 class Franklin(object):
     "Franklin API client interface"
 
-    def __init__(self, base_uri, username, password):
+    def __init__(self, base_uri, email, password):
         """Construct a new Franklin API client interface
 
         :param base_uri: Base uri for the Franklin server
-        :param username: Franklin username
+        :param email: Franklin email
         :param password: Franklin password
         """
         self.api_version = 'v1'
         self.api_uri = f'{base_uri}/{self.api_version}'
 
         # Authenticate once using the FranklinAuth class
-        self.auth = FranklinAuth(self.api_uri, username, password)
+        self.auth = FranklinAuth(self.api_uri, email, password)
 
     def _get(self, endpoint, params=None, **kwargs):
         """

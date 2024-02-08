@@ -2,12 +2,20 @@
 
 Python package for Franklin API
 
+## Install
+
+```
+pip install -e .
+pip install -e .[dev]  # Development environment including flake8 and pytest
+```
+
 ## Test
 
-To test set `FRANKLIN_BASE_URI` environment variable.
+To test set `POSTMAN_FRANKLIN_MOCKUP_URI` environment variable.
 
 ```bash
-source FRANKLIN_BASE_URI=<path_to_franklin_api>
+source POSTMAN_FRANKLIN_MOCKUP_URI=<uri_to_franklin_mock_server>
+pytest .
 ```
 
 ## Resources

@@ -2,7 +2,7 @@
 name = "Franklin_Client"
 version = "0.0.0"
 authors = [
-  { name="Robert Ernst", email="author@example.com" },
+  { name="Robert Ernst", email="R.F.Ernst-3@umcutrecht.nl" },
 ]
 description = "Python package for Franklin API"
 readme = "README.md"
@@ -12,6 +12,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dynamic = ["dependencies", "optional-dependencies"]
 
 [project.urls]
 Homepage = "https://github.com/UMCUGenetics/franklin_client"
@@ -19,3 +20,7 @@ Issues = "https://github.com/UMCUGenetics/franklin_client/issues"
 
 [tool.pytest.ini_options]
 pythonpath = "src/"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = {dev = { file = ["requirements-dev.txt"] }}
