@@ -36,6 +36,21 @@ class Franklin(object):
         """Get a list of all organization assays."""
         return self._get(endpoint='assay/list')['assays']  # Note: Should we return the whole response or just the assays list?
 
-    def get_analysis_list(self):
-        """Get a list of all analyses for each assay."""
-        return self._get(endpoint='analyses/list')['analyses_by_assay']
+    def get_analysis_list(self, analysis_name=None, status=None, created_before=None, created_after=None, assay_id=None):
+        """Get a list of all analyses for each assay.
+
+        :param analysis_name: Optional filter by the name of the analysis,
+            will return analysis where name contains the partial string
+        :param status: Optional filter by the status of the analysis (active\suspended\resolved\creating)
+        :param created_before: Optional filter by the date of creation, before (yyyy-MM-dd)
+        :param created_after: Optional filter by the date of creation, after (yyyy-MM-dd)
+        :param assay_id: Optional filter by the assay id
+        """
+        params = {
+            'analysis_name': analysis_name,
+            'status': status,
+            'created_before': created_before,
+            'created_after': created_after,
+            'assay_id': assay_id
+        }
+        return self._get(endpoint='analyses/list', params=params)['analyses_by_assay']

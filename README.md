@@ -48,8 +48,8 @@ franklin = franklin_client.Franklin(
     password='your_password'
 )
 
-print(franklin.get_assay_list())
-print(franklin.get_analysis_list())
+assays = franklin.get_assay_list()
+print(franklin.get_analysis_list(assay_id=assays[0]['id']))
 ```
 
 ## Resources
