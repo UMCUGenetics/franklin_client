@@ -135,16 +135,9 @@ class Franklin(object):
         """
         return self._post(endpoint='variant/org_assessments', data={'variants': variants})
 
-    def get_variant(self, search_text):  # Todo: Check if this is the correct name -> variant_search?
+    def search_variant(self, search_text):  # Todo: Check if this is the correct name -> variant_search?
         """Search for a variant by text
 
         :param search_text: String that represents a variant in a variety of nomenclatures (c.Dot, p.Dot, chrom position etc.)
         """
         return self._get(endpoint='variant/search', params={'search_text': search_text})
-
-    def parse_variant(self, search_text_input):  # Todo Check if this is the correct name -> parse_search?
-        """Search for a variant by text
-
-        :param search_text_input: String that represents a variant in a variety of nomenclatures (c.Dot, p.Dot, chrom position etc.)
-        """
-        return self._post(endpoint='parse_search', data={'search_text_input': search_text_input})
