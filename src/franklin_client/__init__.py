@@ -131,7 +131,10 @@ class Franklin(object):
         """Get the organization assessments (classification) for a list of variants
 
         :param variants: list of variants
-            [{"chromosome": "chr..", "position": 123, "reference": "..", "alternative": "..", "reference_version": "HG38"}, ...]
+            [
+                {"chromosome": "chr..", "position": 123, "reference": "..", "alternative": "..", "reference_version": "HG38"},
+                ...
+            ]
         """
         return self._post(endpoint='variant/org_assessments', data={'variants': variants})
 
