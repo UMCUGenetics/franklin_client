@@ -11,7 +11,6 @@ class FranklinAuth(requests.auth.AuthBase):
         :param username: Franklin username
         :param password: Franklin password
         """
-        # ToDo: Implement some form of cache for the token
         self.token = requests.get(f'{api_uri}/auth/login', params={'email': email, 'password': password}).json()['token']
 
     def __call__(self, r):
