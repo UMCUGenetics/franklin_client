@@ -33,7 +33,7 @@ pip install -e .[dev]  # Development environment including flake8 and pytest
 To run pytest locally you need to set the `POSTMAN_FRANKLIN_MOCKUP_URI` environment variable to configure a Postman Franklin mock server.
 
 ```bash
-source POSTMAN_FRANKLIN_MOCKUP_URI=<uri_to_franklin_mock_server>
+export POSTMAN_FRANKLIN_MOCKUP_URI=<uri_to_franklin_mock_server>
 pytest .
 ```
 
