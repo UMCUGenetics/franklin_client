@@ -59,6 +59,7 @@ source venv/bin/activate
 
 franklin -h
 franklin download_bam <base_uri> <email> <password> <analysis_id>
+franklin download_vcf <base_uri> <email> <password> <analysis_id>
 ```
 
 ## Resources
