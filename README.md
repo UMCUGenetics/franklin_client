@@ -52,6 +52,15 @@ assays = franklin.get_assay_list()
 print(franklin.get_analysis_list(assay_id=assays[0]['id']))
 ```
 
+## Example CLI usage
+
+```bash
+source venv/bin/activate
+
+franklin -h
+franklin download_bam <base_uri> <email> <password> <analysis_id>
+```
+
 ## Resources
 
 - [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)

@@ -4,7 +4,7 @@ version = "0.0.0"
 description = "Python package for Franklin API"
 readme = "README.md"
 requires-python = ">=3.6"
-license = "MIT"
+license = {file = "LICENSE"}
 authors = [
   { name="Robert Ernst", email="R.F.Ernst-3@umcutrecht.nl" },
 ]
@@ -25,3 +25,6 @@ pythonpath = "src/"
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}
 optional-dependencies = {dev = { file = ["requirements-dev.txt"] }}
+
+[project.scripts]
+franklin = "franklin_client.cli:main"
