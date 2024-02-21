@@ -2,21 +2,27 @@ import requests
 
 
 class FranklinAuth(requests.auth.AuthBase):
-    "Franklin API authentication"
+    """Franklin API authentication"""
 
     def __init__(self, api_uri, email, password):
-        """Construct a new Franklin API client authentication
+        """Initialize a new Franklin API client authentication
 
-        :param api_uri: API uri
-        :param username: Franklin username
-        :param password: Franklin password
+        Args:
+            api_uri (str): Franklin API uri
+            email (str): Franklin username
+            password (str): Franklin password
+
         """
         self.token = requests.get(f'{api_uri}/auth/login', params={'email': email, 'password': password}).json()['token']
 
     def __call__(self, r):
-        """"Add the Authorization header to the request.
+        """Add the Authorization header to the request.
 
-        :param r: The request to add the Authorization header to
+        Args:
+            r (requets): The request to add the Authorization header to
+
+        Returns:
+            request: The requests with added Authorization header
         """
         r.headers['Authorization'] = f'Bearer {self.token}'
         return r
