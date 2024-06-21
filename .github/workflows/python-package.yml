@@ -65,6 +65,8 @@ jobs:
             #              run pytest
             #----------------------------------------------
             - name: Run tests
+              env:
+                  POSTMAN_FRANKLIN_MOCKUP_URI: ${{ secrets.POSTMAN_FRANKLIN_MOCKUP_URI }}
               run: |
                   source .venv/bin/activate
                   pytest tests
