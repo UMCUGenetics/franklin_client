@@ -1,7 +1,11 @@
 # Source: https://github.com/marketplace/actions/install-poetry-action
 name: Python (flake8, pytest)
 
-on: pull_request
+on:
+    push:
+        branches: ['main', 'develop']
+    pull_request:
+        branches: ['main', 'develop']
 
 jobs:
     test:
@@ -43,7 +47,7 @@ jobs:
               if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
               run: poetry install --no-interaction --no-root
             #----------------------------------------------
-            # install your root project, if required
+            # install root project
             #----------------------------------------------
             - name: Install project
               run: poetry install --no-interaction
