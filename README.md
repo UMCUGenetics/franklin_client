@@ -23,9 +23,7 @@ git+https://github.com/UMCUGenetics/franklin_client.git@branchname#egg=franklin_
 ```bash
 git clone git@github.com:UMCUGenetics/franklin_client.git
 cd franklin_client
-python3 -m venv venv
-source venv/bin/activate
-pip install -e .[dev]  # Development environment including flake8 and pytest
+poetry install --with dev
 ```
 
 ### Run local pytest
@@ -64,5 +62,5 @@ franklin download_vcf <base_uri> <email> <password> <analysis_id>
 
 ## Resources
 
-- [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)
-- [Postman mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/)
+-   [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)
+-   [Postman mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/)
