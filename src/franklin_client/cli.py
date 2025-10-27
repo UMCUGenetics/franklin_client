@@ -24,6 +24,25 @@ def download_bam(args):
                 shutil.copyfileobj(r.raw, f)
 
 
+def download_coverage_report(args):
+    """Download coverage report from Franklin
+
+    Args:
+        args (argparse): command line arguments
+    """
+
+    franklin = Franklin(args.base_uri, args.email, args.password)
+    coverage_report = franklin.get_analysis_coverage_report(
+        args.analysis_id, coverage_type=args.coverage_type, coverage_region=args.coverage_region
+    )
+    file_url = coverage_report["download_url"]
+    file_name = get_file_name_from_aws_url(file_url)
+
+    with requests.get(file_url, stream=True) as r:
+        with open(file_name, "wb") as f:
+            shutil.copyfileobj(r.raw, f)
+
+
 def download_vcf(args):
     """Download VCF file from Franklin
 
@@ -60,6 +79,18 @@ def main():
     )
     parser_download_bam.add_argument("analysis_id", type=int, help="Analysis id")
     parser_download_bam.set_defaults(func=download_bam)
+
+    parser_download_coverage_report = subparsers.add_parser(
+        "download_coverage_report", parents=[franklin_connection_parser], help="Download analysis coverage report"
+    )
+    parser_download_coverage_report.add_argument("analysis_id", type=int, help="Analysis id")
+    parser_download_coverage_report.add_argument(
+        "--coverage_type", type=str, choices=["genes", "exons", "kit"], default="gene", help="Coverage type"
+    )
+    parser_download_coverage_report.add_argument(
+        "--coverage_region", type=str, choices=["coding", "targeted"], default="coding", help="Coverage region"
+    )
+    parser_download_coverage_report.set_defaults(func=download_coverage_report)
 
     parser_download_vcf = subparsers.add_parser(
         "download_vcf", parents=[franklin_connection_parser], help="Download all analysis VCF files"

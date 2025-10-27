@@ -160,6 +160,22 @@ class Franklin(object):
         """
         return self._get(endpoint="analysis/bam_location", params={"analysis_id": analysis_id})
 
+    def get_analysis_coverage_report(self, analysis_id, coverage_type="genes", coverage_region="coding"):
+        """Get the coverage report for an analysis
+
+        Args:
+            analysis_id (int): analysis id
+            coverage_type (str, optional): coverage type (genes, exons, kit). Defaults to "genes".
+            coverage_region (str, optional): coverage region (coding, targeted). Defaults to "coding".
+
+        Returns:
+            dict: key = download_url, item = coverage report AWS location
+        """
+        return self._post(
+            endpoint="analysis/export/coverage_csv",
+            data={"analysis_id": analysis_id, "coverage_type": coverage_type, "coverage_region": coverage_region},
+        )
+
     def get_analysis_variants(self, variant_type, analysis_id):
         """Get the variants for an analysis
 
