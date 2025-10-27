@@ -14,8 +14,8 @@ class Franklin(object):
             email (str): Franklin username
             password (str): Franklin password
         """
-        self.api_version = 'v1'
-        self.api_uri = f'{base_uri}/{self.api_version}'
+        self.api_version = "v1"
+        self.api_uri = f"{base_uri}/{self.api_version}"
 
         # Authenticate once using the FranklinAuth class
         self.auth = FranklinAuth(self.api_uri, email, password)
@@ -30,7 +30,7 @@ class Franklin(object):
         Returns:
             dict: Return the response as decoded json
         """
-        uri = f'{self.api_uri}/{endpoint}'
+        uri = f"{self.api_uri}/{endpoint}"
         response = requests.get(uri, params=params, auth=self.auth, **kwargs)
         response.raise_for_status()  # Raise exception on request error
         return response.json()
@@ -45,7 +45,7 @@ class Franklin(object):
         Returns:
             dict: Return the response as decoded json
         """
-        uri = f'{self.api_uri}/{endpoint}'
+        uri = f"{self.api_uri}/{endpoint}"
         response = requests.post(uri, json=data, auth=self.auth, **kwargs)
         response.raise_for_status()
         return response.json()
@@ -57,11 +57,7 @@ class Franklin(object):
             list: List of assays
 
         """
-        return self._get(endpoint='assay/list')['assays']  # Note: Should we return the whole response or just the assays list?
-
-    # def create_analysis_bulk()
-
-    # def create_analysis_shell_case()
+        return self._get(endpoint="assay/list")["assays"]  # Note: Should we return the whole response or just the assays list?
 
     def get_analysis_list(self, analysis_name=None, status=None, created_before=None, created_after=None, assay_id=None):
         """Get a list of all analyses for each assay
@@ -79,13 +75,13 @@ class Franklin(object):
             dict: key = assay, item = list of analyses
         """
         params = {
-            'analysis_name': analysis_name,
-            'status': status,
-            'created_before': created_before,
-            'created_after': created_after,
-            'assay_id': assay_id
+            "analysis_name": analysis_name,
+            "status": status,
+            "created_before": created_before,
+            "created_after": created_after,
+            "assay_id": assay_id,
         }
-        return self._get(endpoint='analyses/list', params=params)['analyses_by_assay']
+        return self._get(endpoint="analyses/list", params=params)["analyses_by_assay"]
 
     def get_analysis_status(self, analysis_ids):
         """Get the status of analysis by ids.
@@ -97,7 +93,7 @@ class Franklin(object):
             list: list of analysis dicts
 
         """
-        return self._post(endpoint='analyses/status', data={'analysis_ids': analysis_ids})
+        return self._post(endpoint="analyses/status", data={"analysis_ids": analysis_ids})
 
     def get_analysis_qc_metrics(self, analysis_id):
         """Get the qc metrics for an analysis
@@ -108,7 +104,7 @@ class Franklin(object):
         Returns:
             dict: qc metrics
         """
-        return self._get(endpoint='analysis/qc_metrics', params={'analysis_id': analysis_id})
+        return self._get(endpoint="analysis/qc_metrics", params={"analysis_id": analysis_id})
 
     def get_analysis_report(self, analysis_id):
         """Get the analysis report for an analysis
@@ -120,7 +116,7 @@ class Franklin(object):
             dict or None: analysis report
         """
         try:
-            analysis_report = self._get(endpoint='analysis/report', params={'analysis_id': analysis_id})
+            analysis_report = self._get(endpoint="analysis/report", params={"analysis_id": analysis_id})
         except requests.exceptions.HTTPError as e:
             if e.response.status_code == 400:  # Franklin api returns status code 400 if no report found
                 return None
@@ -129,7 +125,7 @@ class Franklin(object):
         else:
             return analysis_report
 
-    def get_analysis_signed_report_file(self, analysis_id, format='pdf'):
+    def get_analysis_signed_report_file(self, analysis_id, format="pdf"):
         # Todo: Check the correct return type
         """Get the signed report file for an analysis.
 
@@ -140,7 +136,7 @@ class Franklin(object):
         Returns:
             dict: signed report file AWS location
         """
-        return self._get(endpoint='analysis/signed_report_file', params={'analysis_id': analysis_id, 'format': format})
+        return self._get(endpoint="analysis/signed_report_file", params={"analysis_id": analysis_id, "format": format})
 
     def get_analysis_vcf(self, analysis_id):
         """Get the vcf file for an analysis
@@ -151,7 +147,7 @@ class Franklin(object):
         Returns:
             dict: key = vcf_type, item = list of vcf file AWS locations
         """
-        return self._get(endpoint='analysis/vcf_location', params={'analysis_id': analysis_id})
+        return self._get(endpoint="analysis/vcf_location", params={"analysis_id": analysis_id})
 
     def get_analysis_bam(self, analysis_id):
         """Get the bam file for an analysis
@@ -162,7 +158,7 @@ class Franklin(object):
         Returns:
             dict: key = bam/bai, item = file AWS locations
         """
-        return self._get(endpoint='analysis/bam_location', params={'analysis_id': analysis_id})
+        return self._get(endpoint="analysis/bam_location", params={"analysis_id": analysis_id})
 
     def get_analysis_variants(self, variant_type, analysis_id):
         """Get the variants for an analysis
@@ -174,10 +170,10 @@ class Franklin(object):
         Returns:
             list: list of variants
         """
-        if variant_type not in ['snp', 'sv']:
-            raise ValueError(f'Invalid variant type: {variant_type}')
+        if variant_type not in ["snp", "sv"]:
+            raise ValueError(f"Invalid variant type: {variant_type}")
 
-        return self._get(endpoint=f'analysis/variants/{variant_type}', params={'analysis_id': analysis_id})['variants']
+        return self._get(endpoint=f"analysis/variants/{variant_type}", params={"analysis_id": analysis_id})["variants"]
 
     def get_variant_org_assessments(self, variants):
         """Get the organization assessments (classification) for a list of variants
@@ -191,7 +187,7 @@ class Franklin(object):
         Returns:
             list: list of variant assessments
         """
-        return self._post(endpoint='variant/org_assessments', data={'variants': variants})['variants_assessments']
+        return self._post(endpoint="variant/org_assessments", data={"variants": variants})["variants_assessments"]
 
     def search_variant(self, search_text):  # Todo: Check if this is the correct name -> variant_search?
         """Search for a variant by text
@@ -202,4 +198,4 @@ class Franklin(object):
         Returns:
             dict: dict of variant annotation
         """
-        return self._get(endpoint='variant/search', params={'search_text': search_text})['variant_options']
+        return self._get(endpoint="variant/search", params={"search_text": search_text})["variant_options"]

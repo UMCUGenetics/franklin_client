@@ -13,14 +13,14 @@ class FranklinAuth(requests.auth.AuthBase):
             password (str): Franklin password
 
         """
-        response = requests.get(f'{api_uri}/auth/login', params={'email': email, 'password': password})
+        response = requests.get(f"{api_uri}/auth/login", params={"email": email, "password": password})
 
         if response.status_code == 401:
             raise requests.exceptions.HTTPError(response.text)
         else:
             response.raise_for_status()
 
-        self.token = response.json()['token']
+        self.token = response.json()["token"]
 
     def __call__(self, r):
         """Add the Authorization header to the request.
@@ -31,5 +31,5 @@ class FranklinAuth(requests.auth.AuthBase):
         Returns:
             request: The requests with added Authorization header
         """
-        r.headers['Authorization'] = f'Bearer {self.token}'
+        r.headers["Authorization"] = f"Bearer {self.token}"
         return r

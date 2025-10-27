@@ -7,4 +7,4 @@ def get_file_name_from_aws_url(aws_url):
     Returns:
         str: File name
     """
-    return aws_url.split('?')[0].split('/')[-1]
+    return aws_url.split("?")[0].split("/")[-1]
