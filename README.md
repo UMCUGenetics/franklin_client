@@ -1,6 +1,7 @@
 # Franklin API Python client
 
-![python-package](https://github.com/UMCUGenetics/franklin_client/actions/workflows/python-package.yml/badge.svg)
+![test](https://github.com/UMCUGenetics/franklin_client/actions/workflows/python-package.yml/badge.svg)
+![lint](https://github.com/UMCUGenetics/franklin_client/actions/workflows/python-package.yml/badge.svg)
 
 ## Setup from github
 
