@@ -14,7 +14,7 @@ pip install git+https://github.com/UMCUGenetics/franklin_client.git@branchname
 
 Add this line to your requirements file. Edit "branchname" if needed. Specific version tags and commits can also be used.
 
-```
+```sh
 git+https://github.com/UMCUGenetics/franklin_client.git@branchname#egg=franklin_client
 ```
 
@@ -23,7 +23,8 @@ git+https://github.com/UMCUGenetics/franklin_client.git@branchname#egg=franklin_
 ```bash
 git clone git@github.com:UMCUGenetics/franklin_client.git
 cd franklin_client
-poetry install --with dev
+uv sync
+pre-commit install
 ```
 
 ### Run local pytest
@@ -31,8 +32,10 @@ poetry install --with dev
 To run pytest locally you need to set the `POSTMAN_FRANKLIN_MOCKUP_URI` environment variable to configure a Postman Franklin mock server.
 
 ```bash
-export POSTMAN_FRANKLIN_MOCKUP_URI=<uri_to_franklin_mock_server>
-pytest .
+# create .env POSTMAN_FRANKLIN_MOCKUP_URI="<uri_to_franklin_mock_server>"
+# or
+export POSTMAN_FRANKLIN_MOCKUP_URI="<uri_to_franklin_mock_server>"
+uv run pytest
 ```
 
 ## Example package usage
@@ -53,14 +56,12 @@ print(franklin.get_analysis_list(assay_id=assays[0]['id']))
 ## Example CLI usage
 
 ```bash
-source venv/bin/activate
-
-franklin -h
-franklin download_bam <base_uri> <email> <password> <analysis_id>
-franklin download_vcf <base_uri> <email> <password> <analysis_id>
+uv run franklin -h
+uv run franklin download_bam <base_uri> <email> <password> <analysis_id>
+uv run franklin download_vcf <base_uri> <email> <password> <analysis_id>
 ```
 
 ## Resources
 
--   [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)
--   [Postman mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/)
+- [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)
+- [Postman mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/)
