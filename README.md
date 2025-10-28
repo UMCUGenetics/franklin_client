@@ -3,29 +3,24 @@
 ![test](https://github.com/UMCUGenetics/franklin_client/actions/workflows/test.yml/badge.svg)
 ![lint](https://github.com/UMCUGenetics/franklin_client/actions/workflows/lint.yml/badge.svg)
 
-## Setup from github
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-pip install git+https://github.com/UMCUGenetics/franklin_client.git@branchname
-```
-
-## Setup from github in your requirements.txt
-
-Add this line to your requirements file. Edit "branchname" if needed. Specific version tags and commits can also be used.
-
-```sh
-git+https://github.com/UMCUGenetics/franklin_client.git@branchname#egg=franklin_client
-```
-
-## Setup local development environment
+## Setup application (development) environment
 
 ```bash
 git clone git@github.com:UMCUGenetics/franklin_client.git
 cd franklin_client
 uv sync
 pre-commit install
+```
+
+### Example CLI usage
+
+Add username and password to `config.toml`.
+
+```bash
+uv run franklin -h
+uv run franklin download_coverage_report <analysis_id>
+uv run franklin download_bam <analysis_id>
+uv run franklin download_vcf <analysis_id>
 ```
 
 ### Run local pytest
@@ -39,12 +34,28 @@ export POSTMAN_FRANKLIN_MOCKUP_URI="<uri_to_franklin_mock_server>"
 uv run pytest
 ```
 
+## Setup package from github
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install git+https://github.com/UMCUGenetics/franklin_client.git@branchname
+```
+
+### Setup from github in your requirements.txt
+
+Add this line to your requirements file. Edit "branchname" if needed. Specific version tags and commits can also be used.
+
+```sh
+git+https://github.com/UMCUGenetics/franklin_client.git@branchname#egg=franklin_client
+```
+
 ## Example package usage
 
 ```python
-import franklin_client
+from franklin_client.services import Franklin
 
-franklin = franklin_client.Franklin(
+franklin = Franklin(
     base_uri='https://api.genoox.com',
     email='your@email.com',
     password='your_password'
@@ -52,14 +63,6 @@ franklin = franklin_client.Franklin(
 
 assays = franklin.get_assay_list()
 print(franklin.get_analysis_list(assay_id=assays[0]['id']))
-```
-
-## Example CLI usage
-
-```bash
-uv run franklin -h
-uv run franklin download_bam <base_uri> <email> <password> <analysis_id>
-uv run franklin download_vcf <base_uri> <email> <password> <analysis_id>
 ```
 
 ## Resources
