@@ -1,22 +1,27 @@
-import argparse
 import shutil
+from typing_extensions import Literal
 
 import requests
+import typer
 
-from franklin_client import Franklin
-from franklin_client.utils import get_file_name_from_aws_url
+from franklin_client.config import settings
+from franklin_client.services import Franklin
+from franklin_client.utils import get_file_name_from_aws_url, get_file_name_from_headers
+
+app = typer.Typer(no_args_is_help=True)
 
 
-def download_bam(args):
+@app.command("download_bam")
+def download_bam(analysis_id: int):
     """Download BAM file from Franklin
 
     Args:
-        args (argparse): command line arguments
+        analysis_id (int): Analysis id
     """
 
-    franklin = Franklin(args.base_uri, args.email, args.password)
+    franklin = Franklin(settings.franklin.base_uri, settings.franklin.username, settings.franklin.password.get_secret_value())
 
-    for file_type, file_url in franklin.get_analysis_bam(args.analysis_id).items():
+    for file_type, file_url in franklin.get_analysis_bam(analysis_id).items():
         file_name = get_file_name_from_aws_url(file_url)
 
         with requests.get(file_url, stream=True) as r:
@@ -24,83 +29,49 @@ def download_bam(args):
                 shutil.copyfileobj(r.raw, f)
 
 
-def download_coverage_report(args):
+@app.command("download_coverage_report")
+def download_coverage_report(
+    analysis_id: int,
+    coverage_type: Literal["genes", "exons", "kit"] = "genes",
+    coverage_region: Literal["coding", "targeted"] = "coding",
+):
     """Download coverage report from Franklin
 
     Args:
-        args (argparse): command line arguments
+        analysis_id (int): Analysis id
+        coverage_type (str, optional): Coverage type. Defaults to "genes".
+        coverage_region (str, optional): Coverage region. Defaults to "coding".
     """
 
-    franklin = Franklin(args.base_uri, args.email, args.password)
+    franklin = Franklin(settings.franklin.base_uri, settings.franklin.username, settings.franklin.password.get_secret_value())
     coverage_report = franklin.get_analysis_coverage_report(
-        args.analysis_id, coverage_type=args.coverage_type, coverage_region=args.coverage_region
+        analysis_id, coverage_type=coverage_type, coverage_region=coverage_region
     )
     file_url = coverage_report["download_url"]
-    file_name = get_file_name_from_aws_url(file_url)
-
     with requests.get(file_url, stream=True) as r:
+        file_name = get_file_name_from_headers(r.headers)
         with open(file_name, "wb") as f:
             shutil.copyfileobj(r.raw, f)
 
 
-def download_vcf(args):
+@app.command("download_vcf")
+def download_vcf(analysis_id: int):
     """Download VCF file from Franklin
 
     Args:
-        args (argparse): command line arguments
+        analysis_id (int): Analysis id
     """
 
-    franklin = Franklin(args.base_uri, args.email, args.password)
-    analysis_vcf_files = franklin.get_analysis_vcf(args.analysis_id)
+    franklin = Franklin(settings.franklin.base_uri, settings.franklin.username, settings.franklin.password.get_secret_value())
+    analysis_vcf_files = franklin.get_analysis_vcf(analysis_id)
 
     for file_type in analysis_vcf_files:
         for file_url in analysis_vcf_files[file_type]:
             file_name = get_file_name_from_aws_url(file_url)
-            print(file_name, file_url)
             with requests.get(file_url, stream=True) as r:
                 with open(file_name, "wb") as f:
                     shutil.copyfileobj(r.raw, f)
 
 
-def main():
-    """CLI entry point."""
-
-    parser = argparse.ArgumentParser(description="Franklin API client interface")
-    parser.set_defaults(func=lambda _: parser.print_help())
-    subparsers = parser.add_subparsers()
-
-    franklin_connection_parser = argparse.ArgumentParser(add_help=False)
-    franklin_connection_parser.add_argument("base_uri", help="Base uri for the Franklin server")
-    franklin_connection_parser.add_argument("email", help="Franklin username")
-    franklin_connection_parser.add_argument("password", help="Franklin password")
-
-    parser_download_bam = subparsers.add_parser(
-        "download_bam", parents=[franklin_connection_parser], help="Download analysis BAM file"
-    )
-    parser_download_bam.add_argument("analysis_id", type=int, help="Analysis id")
-    parser_download_bam.set_defaults(func=download_bam)
-
-    parser_download_coverage_report = subparsers.add_parser(
-        "download_coverage_report", parents=[franklin_connection_parser], help="Download analysis coverage report"
-    )
-    parser_download_coverage_report.add_argument("analysis_id", type=int, help="Analysis id")
-    parser_download_coverage_report.add_argument(
-        "--coverage_type", type=str, choices=["genes", "exons", "kit"], default="gene", help="Coverage type"
-    )
-    parser_download_coverage_report.add_argument(
-        "--coverage_region", type=str, choices=["coding", "targeted"], default="coding", help="Coverage region"
-    )
-    parser_download_coverage_report.set_defaults(func=download_coverage_report)
-
-    parser_download_vcf = subparsers.add_parser(
-        "download_vcf", parents=[franklin_connection_parser], help="Download all analysis VCF files"
-    )
-    parser_download_vcf.add_argument("analysis_id", type=int, help="Analysis id")
-    parser_download_vcf.set_defaults(func=download_vcf)
-
-    args = parser.parse_args()
-    args.func(args)
-
-
 if __name__ == "__main__":
-    main()
+    app()
