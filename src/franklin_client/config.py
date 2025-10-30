@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     """Application settings."""
 
     franklin: FranklinSettings
+    log_level: str = "INFO"
 
     model_config = SettingsConfigDict(toml_file="config.toml")
 

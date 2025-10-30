@@ -5,6 +5,7 @@ import requests
 import typer
 
 from franklin_client.config import settings
+from franklin_client.logger import logger
 from franklin_client.services import Franklin
 from franklin_client.utils import get_file_name_from_aws_url, get_file_name_from_headers
 
@@ -23,7 +24,7 @@ def download_bam(analysis_id: int):
 
     for file_type, file_url in franklin.get_analysis_bam(analysis_id).items():
         file_name = get_file_name_from_aws_url(file_url)
-
+        logger.info(f"Downloading BAM file: {file_name}")
         with requests.get(file_url, stream=True) as r:
             with open(file_name, "wb") as f:
                 shutil.copyfileobj(r.raw, f)
@@ -50,6 +51,7 @@ def download_coverage_report(
     file_url = coverage_report["download_url"]
     with requests.get(file_url, stream=True) as r:
         file_name = get_file_name_from_headers(r.headers)
+        logger.info(f"Downloading coverage report: {file_name}")
         with open(file_name, "wb") as f:
             shutil.copyfileobj(r.raw, f)
 
@@ -68,6 +70,7 @@ def download_vcf(analysis_id: int):
     for file_type in analysis_vcf_files:
         for file_url in analysis_vcf_files[file_type]:
             file_name = get_file_name_from_aws_url(file_url)
+            logger.info(f"Downloading VCF file: {file_name}")
             with requests.get(file_url, stream=True) as r:
                 with open(file_name, "wb") as f:
                     shutil.copyfileobj(r.raw, f)

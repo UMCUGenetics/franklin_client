@@ -34,6 +34,10 @@ export POSTMAN_FRANKLIN_MOCKUP_URI="<uri_to_franklin_mock_server>"
 uv run pytest
 ```
 
+### Logger
+
+To modify log levels add `log_level = "LEVEL"` to `config.toml`. Default log level is set to INFO.
+
 ## Setup package from github
 
 ```bash

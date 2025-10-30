@@ -1,5 +1,7 @@
 import requests
 
+from franklin_client.logger import logger
+
 
 class FranklinAuth(requests.auth.AuthBase):
     """Franklin API authentication"""
@@ -64,6 +66,8 @@ class Franklin(object):
         """
         uri = f"{self.api_uri}/{endpoint}"
         response = requests.get(uri, params=params, auth=self.auth, **kwargs)
+        logger.debug(f"GET {response.url} - Status code: {response.status_code}")
+        logger.debug(f"Response content: {response.text}")
         response.raise_for_status()  # Raise exception on request error
         return response.json()
 
@@ -79,6 +83,8 @@ class Franklin(object):
         """
         uri = f"{self.api_uri}/{endpoint}"
         response = requests.post(uri, json=data, auth=self.auth, **kwargs)
+        logger.debug(f"POST {response.url} - Status code: {response.status_code}")
+        logger.debug(f"Response content: {response.text}")
         response.raise_for_status()
         return response.json()
 
