@@ -198,13 +198,14 @@ class Franklin(object):
         """
         return self._get(endpoint="analysis/bam_location", params={"analysis_id": analysis_id})
 
-    def get_analysis_coverage_report(self, analysis_id, coverage_type="genes", coverage_region="coding"):
+    def get_analysis_coverage_report(self, analysis_id, coverage_type="genes", coverage_region="coding", virtual_panel_ids=[]):
         """Get the coverage report for an analysis
 
         Args:
             analysis_id (int): analysis id
             coverage_type (str, optional): coverage type (genes, exons, kit). Defaults to "genes".
             coverage_region (str, optional): coverage region (coding, targeted). Defaults to "coding".
+            virtual_panel_ids (list[str], optional): An list of virtual panel IDs to filter the CSV by specific virtual panels.
 
         Returns:
             dict: key = download_url, item = coverage report AWS location
@@ -215,6 +216,7 @@ class Franklin(object):
                 "analysis_id": analysis_id,
                 "coverage_type": coverage_type,
                 "coverage_region": coverage_region,
+                "virtual_panel_ids": virtual_panel_ids,
             },
         )
 

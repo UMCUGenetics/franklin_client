@@ -29,6 +29,7 @@ def download_coverage_report(
     analysis_id: int,
     coverage_type: Literal["genes", "exons", "kit"] = "genes",
     coverage_region: Literal["coding", "targeted"] = "coding",
+    virtual_panel_id: str = "",
 ):
     """Download coverage report from Franklin
 
@@ -36,11 +37,12 @@ def download_coverage_report(
         analysis_id (int): Analysis id
         coverage_type (str, optional): Coverage type. Defaults to "genes".
         coverage_region (str, optional): Coverage region. Defaults to "coding".
+        virtual_panel_ids (list[str], optional):
     """
 
     franklin = Franklin(settings.franklin.base_uri, settings.franklin.username, settings.franklin.password.get_secret_value())
     coverage_report = franklin.get_analysis_coverage_report(
-        analysis_id, coverage_type=coverage_type, coverage_region=coverage_region
+        analysis_id, coverage_type=coverage_type, coverage_region=coverage_region, virtual_panel_ids=[virtual_panel_id]
     )
     download_file(coverage_report["download_url"])
 
