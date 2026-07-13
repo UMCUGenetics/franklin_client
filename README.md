@@ -71,5 +71,6 @@ print(franklin.get_analysis_list(assay_id=assays[0]['id']))
 
 ## Resources
 
+- [Franklin API Documentation](https://franklin-api-docs.readme.io)
 - [Franklin API Documentation (Postman)](https://www.postman.com/genoox-ps/)
 - [Postman mock servers](https://learning.postman.com/docs/designing-and-developing-your-api/mocking-data/setting-up-mock/)
