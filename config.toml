@@ -1,4 +1,4 @@
 [franklin]
-base_uri = 'https://api.genoox.com'
+base_uri = 'https://pro-api.genoox.com'
 username = ''
 password = ''
