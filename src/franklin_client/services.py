@@ -6,16 +6,16 @@ from franklin_client.logger import logger
 class FranklinAuth(requests.auth.AuthBase):
     """Franklin API authentication"""
 
-    def __init__(self, api_uri, email, password):
+    def __init__(self, base_uri, email, password, api_version="v1"):
         """Initialize a new Franklin API client authentication
 
         Args:
-            api_uri (str): Franklin API uri
+            base_uri (str): Franklin API uri
             email (str): Franklin username
             password (str): Franklin password
 
         """
-        response = requests.get(f"{api_uri}/auth/login", params={"email": email, "password": password})
+        response = requests.get(f"{base_uri}/{api_version}/auth/login", params={"email": email, "password": password})
 
         if response.status_code == 401:
             raise requests.exceptions.HTTPError(response.text)
@@ -48,13 +48,12 @@ class Franklin(object):
             email (str): Franklin username
             password (str): Franklin password
         """
-        self.api_version = "v1"
-        self.api_uri = f"{base_uri}/{self.api_version}"
+        self.base_uri = base_uri
 
         # Authenticate once using the FranklinAuth class
-        self.auth = FranklinAuth(self.api_uri, email, password)
+        self.auth = FranklinAuth(self.base_uri, email, password)
 
-    def _get(self, endpoint, params=None, **kwargs):
+    def _get(self, endpoint, params=None, api_version="v1", **kwargs):
         """Get data from the end_point, combining api uri and end_point.
 
         Args:
@@ -64,14 +63,14 @@ class Franklin(object):
         Returns:
             dict: Return the response as decoded json
         """
-        uri = f"{self.api_uri}/{endpoint}"
+        uri = f"{self.base_uri}/{api_version}/{endpoint}"
         response = requests.get(uri, params=params, auth=self.auth, **kwargs)
         logger.debug(f"GET {response.url} - Status code: {response.status_code}")
         logger.debug(f"Response content: {response.text}")
         response.raise_for_status()  # Raise exception on request error
         return response.json()
 
-    def _post(self, endpoint, data=None, **kwargs):
+    def _post(self, endpoint, data=None, api_version="v1", **kwargs):
         """Post data to the end_point, combining api uri and end_point.
 
         Args:
@@ -81,7 +80,7 @@ class Franklin(object):
         Returns:
             dict: Return the response as decoded json
         """
-        uri = f"{self.api_uri}/{endpoint}"
+        uri = f"{self.base_uri}/{api_version}/{endpoint}"
         response = requests.post(uri, json=data, auth=self.auth, **kwargs)
         logger.debug(f"POST {response.url} - Status code: {response.status_code}")
         logger.debug(f"Response content: {response.text}")
@@ -97,7 +96,7 @@ class Franklin(object):
         """
         return self._get(endpoint="assay/list")["assays"]  # Note: Should we return the whole response or just the assays list?
 
-    def get_analysis_list(self, analysis_name=None, status=None, created_before=None, created_after=None, assay_id=None):
+    def get_analyses(self, analysis_name=None, status=None, created_before=None, created_after=None, assay_id=None):
         """Get a list of all analyses for each assay
 
         Args:
@@ -120,6 +119,18 @@ class Franklin(object):
             "assay_id": assay_id,
         }
         return self._get(endpoint="analyses/list", params=params)["analyses_by_assay"]
+
+    def get_analysis(self, analysis_id):
+        """Get the analysis by id
+
+        Args:
+            analysis_id (str): Analysis id
+
+        Returns:
+            list: list of analysis dicts
+
+        """
+        return self._get(endpoint="analysis", params={"analysis_id": [analysis_id]})
 
     def get_analysis_status(self, analysis_ids):
         """Get the status of analysis by ids.
@@ -233,7 +244,21 @@ class Franklin(object):
         if variant_type not in ["snp", "sv"]:
             raise ValueError(f"Invalid variant type: {variant_type}")
 
-        return self._get(endpoint=f"analysis/variants/{variant_type}", params={"analysis_id": analysis_id})["variants"]
+        return self._get(endpoint=f"analysis/variants/{variant_type}", params={"analysis_id": analysis_id}, api_version="v2")[
+            "variants"
+        ]
+
+    def get_analysis_workbench_variants(self, analysis_id):
+        """Get variants from an analysis workbench (variants selected for review).
+
+        Args:
+            analysis_id: analysis id
+
+        Returns:
+            list: list of workbench variants
+        """
+
+        return self._get(endpoint="analysis/workbench", params={"analysis_id": analysis_id}, api_version="v1_2")
 
     def get_variant_org_assessments(self, variants):
         """Get the organization assessments (classification) for a list of variants
